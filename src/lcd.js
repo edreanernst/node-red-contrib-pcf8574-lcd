@@ -21,9 +21,20 @@
 // SOFTWARE.
 
 module.exports = function(RED) {
+    var LCD = require('./lcd_driver.js');
     function LCDI2C(config) {
         RED.nodes.createNode(this, config);
         var node = this;
+        var addr = 0x0;
+        switch (config.variant) {
+            case "PCF8574":
+                addr = 0x27;
+                break;
+            case "PCF8574AT":
+                addr = 0x3F;
+                break;
+        }
+        var lcd = new LCD(addr);
         node.on('input', function(msg) {
             
         });

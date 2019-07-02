@@ -13,6 +13,10 @@
         "type": "git",
         "url": "https://github.com/edreanernst/node-red-contrib-pcf8574-rpi"
     },
+    "dependencies": {
+        "i2c-bus": "*",
+        "sleep": "*"
+    },
     "keywords": [
         "node-red",
         "PCF8574",
