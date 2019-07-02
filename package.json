@@ -1,0 +1,27 @@
+{
+    "author": {
+        "name": "Edrean Ernst"
+    },
+    "bugs": {
+        "url": "https://github.com/edreanernst/node-red-contrib-pcf8574-rpi/issues"
+    },
+    "name": "node-red-contrib-pcf8574-rpi",
+    "version": "0.0.1",
+    "description": "Interface to PCF8574 I2C driver for LCD",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/edreanernst/node-red-contrib-pcf8574-rpi"
+    },
+    "keywords": [
+        "node-red",
+        "PCF8574",
+        "LCD",
+        "I2C"
+    ],
+    "node-red": {
+        "nodes": {
+            "LCD-I2C": "src/lcd.js"
+        }
+    }
+}
