@@ -62,4 +62,39 @@ SOFTWARE.
 
 <script type="text/x-red" data-help-name="LCD-I2C">
     <p>This node interfaces to an LCD via I2C driven by the PCF8574 driver</p>
+    <h3>Inputs</h3>
+       <dl class="message-properties">
+       <dt class="optional">line
+           <span class="property-type">integer</span>
+       </dt>
+       <dd>the line number on the display where the payload message will be written to.</dd>
+
+       <dt class="optional">action
+           <span class="property-type">string</span>
+       </dt>
+       <dd>the desired action to be performed.</dd>
+
+       <dt class="optional">alignment
+           <span class="property-type">string</span>
+       </dt>
+       <dd>the desired alignment of the payload message on the display line.</dd>
+
+       <dt class="optional">payload
+           <span class="property-type">string</span>
+       </dt>
+       <dd>the text message that should be displayed.</dd></dl>
+    
+    <h3>Details</h3>
+       <p><code>msg.payload</code> is used to provide the text string that should be displayed on the LCD display. If a 
+        <code>msg.line</code> value is specified it will be displayed on that line. Otherwise it will default to the first 
+        line. The alignment is specified using <code>msg.alignment</code> and takes string values of either "center" or "right".</p>
+        
+        <p>Certain actions can be performed by specifying them in <code>msg.action</code>. Actions are performed prior to any messages being written to the display. 
+            Available actions are:
+        <ul>
+            <li>"clearscreen" - To clear the entire screen.</li>
+            <li>"clearline" - Clears the line specified in <code>msg.line</code>.</li>
+            <li>"on" - Turn the display on.</li>
+            <li>"off" - Turn the display off.</li>
+        </ul></p>
 </script>
