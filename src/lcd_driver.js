@@ -130,6 +130,10 @@ class LCD {
             this.write(data[i], displayPorts.CHR);
         return this.write(LCD.SETDDRAMADDR, displayPorts.CMD);
     }
+    isAlive() {
+        var deviceArray = this.i2c.scanSync(this.addr);
+        return (deviceArray.length > 0);
+    }
 }
 
 // commands

@@ -22,6 +22,7 @@
 
 module.exports = function(RED) {
     var LCD = require('./lcd_driver.js');
+
     function LCDI2C(config) {
         RED.nodes.createNode(this, config);
         var node = this;
@@ -35,8 +36,73 @@ module.exports = function(RED) {
                 break;
         }
         var lcd = new LCD(addr);
+        if (typeof lcd !== 'undefined' && lcd) {
+            if (lcd.isAlive()) {
+                node.status({fill:"green", shape:"dot", text:"OK"});
+            } else {
+                node.status({fill:"red", shape:"dot", text:"Unreachable"});
+                RED.log.error("The LCD is unreachable. Please check variant property or connection.");
+            }
+        }
         node.on('input', function(msg) {
+            if (lcd.isAlive()) {
+                node.status({fill:"green", shape:"dot", text:"OK"});
+            } else {
+                node.status({fill:"red", shape:"dot", text:"Unreachable"});
+                RED.log.error("The LCD is unreachable. Please check variant property or connection.");
+                return;
+            }
             
+            if (msg === undefined) {
+                RED.log.error("No input msg defined!");
+                node.status({fill:"red", shape:"dot", text:"No input msg defined!"});
+                return;
+            }
+
+            //Default line if none specified
+            try {
+                if ((msg.line === undefined) || (msg.line > 4) || (msg.line < 1)) {
+                    msg.line = 1;
+                }
+            } catch(e) {
+                msg.line = 1;
+            }
+
+            // Action
+            if (msg.action !== undefined) {
+                switch (msg.action) {
+                    case "clearscreen":
+                        lcd.clear();
+                        break;
+                    case "clearline":
+                        lcd.setCursor(0, msg.line-1);
+                        lcd.print("                    ");
+                        break;
+                    case "off":
+                        lcd.off();
+                        break;
+                    case "on":
+                        lcd.on();
+                        break;
+                }
+            }
+
+            // Payload
+            if (msg.payload !== undefined) {
+                var x = 0;
+                if (msg.alignment !== undefined) {
+                    switch (msg.alignment) {
+                        case "center":
+                            var x = (20 - msg.payload.length) / 2;
+                            break;
+                        case "right":
+                            var x = (20 - msg.payload.length);
+                            break;
+                    }
+                }
+                lcd.setCursor(x, msg.line-1);
+                lcd.print(msg.payload);
+            }
         });
     }
     RED.nodes.registerType("LCD-I2C", LCDI2C);
