@@ -1,3 +1,5 @@
+// Credit: Adapted from https://github.com/wilberforce/lcd-pcf8574 by https://github.com/wilberforce
+
 var sleep = require('sleep');
 
 var displayPorts = {
