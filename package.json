@@ -6,7 +6,7 @@
         "url": "https://github.com/edreanernst/node-red-contrib-pcf8574-lcd/issues"
     },
     "name": "node-red-contrib-pcf8574-lcd",
-    "version": "0.0.1",
+    "version": "0.0.2",
     "description": "Interface to PCF8574 I2C driver for LCD",
     "license": "MIT",
     "repository": {
