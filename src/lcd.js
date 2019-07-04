@@ -27,6 +27,8 @@ module.exports = function(RED) {
         RED.nodes.createNode(this, config);
         var node = this;
         var addr = 0x0;
+        var numLines = 4;
+        var numCols = 20;
         switch (config.variant) {
             case "PCF8574":
                 addr = 0x27;
@@ -35,6 +37,13 @@ module.exports = function(RED) {
                 addr = 0x3F;
                 break;
         }
+        switch (config.size) {
+            case "20x4":
+                numLines = 4;
+                numCols = 20;
+                break;
+        }
+
         var lcd = new LCD(addr);
         if (typeof lcd !== 'undefined' && lcd) {
             if (lcd.isAlive()) {
@@ -53,30 +62,18 @@ module.exports = function(RED) {
                 return;
             }
             
+            //Input validation
             if (msg === undefined) {
                 RED.log.error("No input msg defined!");
                 node.status({fill:"red", shape:"dot", text:"No input msg defined!"});
                 return;
             }
 
-            //Default line if none specified
-            // try {
-            //     if ((msg.line === undefined) || (msg.line > 4) || (msg.line < 1)) {
-            //         msg.line = 1;
-            //     }
-            // } catch(e) {
-            //     msg.line = 1;
-            // }
-
             // Action
             if (msg.action !== undefined) {
                 switch (msg.action) {
                     case "clearscreen":
                         lcd.clear();
-                        break;
-                    case "clearline":
-                        lcd.setCursor(0, msg.line-1);
-                        lcd.print("                    ");
                         break;
                     case "off":
                         lcd.off();
@@ -88,20 +85,45 @@ module.exports = function(RED) {
             }
 
             // Payload
-            if (msg.payload !== undefined) {
-                var x = 0;
-                if (msg.alignment !== undefined) {
-                    switch (msg.alignment) {
-                        case "center":
-                            var x = (20 - msg.payload.length) / 2;
-                            break;
-                        case "right":
-                            var x = (20 - msg.payload.length);
-                            break;
+            if ((msg.payload !== undefined) && (Array.isArray(msg.payload))) {
+                for (var row=0; row < numLines; row++) {
+                    if (msg.payload[row] !== undefined) {
+                        // Clear line if requested
+                        try {
+                            if (msg.payload[row].clear !== undefined) {
+                                if (msg.payload[row].clear) {
+                                    lcd.setCursor(0, row);
+                                    var aStr = "".padStart(numCols, " ");
+                                    lcd.print(aStr);
+                                }
+                            }    
+                        } catch (error) {
+                            RED.log.error("msg.payload[" + row.toString() + "].clear is not defined correctly: " + error);
+                        }
+
+                        try {
+                            if (msg.payload[row].text !== undefined) {
+                                if (msg.payload[row].text !== "") {
+                                    var x = 0;
+                                    if (msg.payload[row].alignment !== undefined) {
+                                        switch (msg.payload[row].alignment) {
+                                            case "center":
+                                                x = (numCols - msg.payload[row].text.length) / 2;
+                                                break;
+                                            case "right":
+                                                x = (numCols - msg.payload[row].text.length);
+                                                break;
+                                        }
+                                    }
+                                    lcd.setCursor(x, row);
+                                    lcd.print(msg.payload[row].text);
+                                }
+                            }
+                        } catch (error) {
+                            RED.log.error("Error with msg.payload[" + row.toString() + "]: " + error);
+                        }
                     }
-                }
-                lcd.setCursor(x, msg.line-1);
-                lcd.print(msg.payload);
+                }   
             }
         });
     }

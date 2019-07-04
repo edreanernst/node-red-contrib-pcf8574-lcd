@@ -64,36 +64,50 @@ SOFTWARE.
     <p>This node interfaces to an LCD via I2C driven by the PCF8574 driver</p>
     <h3>Inputs</h3>
        <dl class="message-properties">
-       <dt class="optional">line
-           <span class="property-type">integer</span>
-       </dt>
-       <dd>the line number on the display where the payload message will be written to.</dd>
+            <dt>payload
+                    <span class="property-type">array</span>
+            </dt>
+            <dd>the payload to be delivered to the display.</dd>
 
-       <dt class="optional">action
-           <span class="property-type">string</span>
-       </dt>
-       <dd>the desired action to be performed.</dd>
-
-       <dt class="optional">alignment
-           <span class="property-type">string</span>
-       </dt>
-       <dd>the desired alignment of the payload message on the display line.</dd>
-
-       <dt class="optional">payload
-           <span class="property-type">string</span>
-       </dt>
-       <dd>the text message that should be displayed.</dd></dl>
+            <dt class="optional">action
+                <span class="property-type">string</span>
+            </dt>
+            <dd>the desired additional action to be performed.</dd>
+        </dl>
     
     <h3>Details</h3>
-       <p><code>msg.payload</code> is used to provide the text string that should be displayed on the LCD display. If a 
-        <code>msg.line</code> value is specified it will be displayed on that line. Otherwise it will default to the first 
-        line. The alignment is specified using <code>msg.alignment</code> and takes string values of either "center" or "right".</p>
+       <p><code>msg.payload</code> is used to provide the payload of the text that should be displayed on the LCD display as well as how and where it 
+        should be displayed. It consists of an array of JSON objects, each object representing a line on the display. The first object represents the first line, the 
+        second represent the second line, and so on.</p>
+        
+       <p>Each object in the array can include any of the following keys :
+           <ul>
+               <li>"clear" - Set to <code>true</code> to clear the specific line before writing the text.</li>
+               <li>"text" - Set to a string that should be written to the specific line on the display.</li>
+               <li>"alignment" - Set to "center" for center alignment, or "right" for right alignment.</li>
+           </ul>
+        </p>
+
+        <p>As an example, if you want to display a text string on line 1 that is center aligned and also clear the line first, and also display a text string on line 4 that is right aligned without clearing the line :</p>
+<pre>"payload": [
+    {
+        "clear": true,
+        "text": "Line 1 Text",
+        "alignment": "center"
+    },
+    {},
+    {},
+    {
+        "clear": false,
+        "text": "Line 4 Text",
+        "alignment": "right"
+    }
+]</pre>
         
         <p>Certain actions can be performed by specifying them in <code>msg.action</code>. Actions are performed prior to any messages being written to the display. 
             Available actions are:
         <ul>
             <li>"clearscreen" - To clear the entire screen.</li>
-            <li>"clearline" - Clears the line specified in <code>msg.line</code>.</li>
             <li>"on" - Turn the display on.</li>
             <li>"off" - Turn the display off.</li>
         </ul></p>

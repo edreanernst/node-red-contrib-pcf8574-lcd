@@ -41,11 +41,10 @@ class LCD {
         sleep.usleep(milli * 1000);
     }
     write4(x, c) {
-        function err() {};
         var a = (x & 0xF0); // Use upper 4 bit nibble
-        this.i2c.sendByte(this.addr, a | displayPorts.backlight | c, err);
-        this.i2c.sendByte(this.addr, a | displayPorts.E | displayPorts.backlight | c, err);
-        this.i2c.sendByte(this.addr, a | displayPorts.backlight | c, err);
+        this.i2c.sendByteSync(this.addr, a | displayPorts.backlight | c);
+        this.i2c.sendByteSync(this.addr, a | displayPorts.E | displayPorts.backlight | c);
+        this.i2c.sendByteSync(this.addr, a | displayPorts.backlight | c);
         this._sleep(1);
     }
     write(x, c) {
