@@ -60,13 +60,13 @@ module.exports = function(RED) {
             }
 
             //Default line if none specified
-            try {
-                if ((msg.line === undefined) || (msg.line > 4) || (msg.line < 1)) {
-                    msg.line = 1;
-                }
-            } catch(e) {
-                msg.line = 1;
-            }
+            // try {
+            //     if ((msg.line === undefined) || (msg.line > 4) || (msg.line < 1)) {
+            //         msg.line = 1;
+            //     }
+            // } catch(e) {
+            //     msg.line = 1;
+            // }
 
             // Action
             if (msg.action !== undefined) {

@@ -10,14 +10,12 @@ Examples of this hardware setup can be found at the following URL's :
 - [Installation](#Installation)
 - [Properties](#Properties)
 - [Usage](#Usage)
-  - [msg.line](#msgline)
-  - [msg.action](#msgaction)
-  - [msg.alignment](#msgalignment)
   - [msg.payload](#msgpayload)
+  - [msg.action](#msgaction)
 - [Examples](#Examples)
-  - [Clear the screen and display text on specific line](#Clear-the-screen-and-display-text-on-specific-line)
+  - [Clear the screen and display text on line 2](#Clear-the-screen-and-display-text-on-line-2)
   - [Turn off the display](#Turn-off-the-display)
-  - [Clear a specific line](#Clear-a-specific-line)
+  - [Clear line 3](#Clear-line-3)
 
 ## Dependencies
 This node depends on the following libraries :
@@ -50,40 +48,56 @@ The node has the following properties :
 ## Usage
 This node will accept the following fields as input (all fields are optional):
 
-### msg.line
-This is a numeric field that indicates the line number on the display that relevant actions will be taken on as well as where text specified in [msg.payload](#msgpayload) will be displayed.
+### msg.payload
+This field takes a JSON object which defines the details of how each line should be displayed on the LCD.
+The JSON object is expected to be an array. Each element in the array represents a line on the display. In other words, the first element corresponds to the first line, and so on. Amount of elements in the array is determined by the type of display.
 
-Accepted values are 1-4 on the 20x4 LCD's. If no value is specified, line 1 will be assumed.
+If an empty element is passed in the array, the corresponding line on the display will not be modified.
+
+Each element in the array consists of the following parameters :
+* "clear" (*optional*) - Set this to true if the line should be cleared before the text is displayed. If not specified, the line will not be cleared.
+* "text" - Set this to the text string that should be displayed.
+* "alignment" (*optional*) - This determines the alignment on the line of the text to be displayed. Valid options are "center" or "right". If not specified, text will be left aligned.
+
+As an example, if you want to display a text string on line 1 that is center aligned and also clear the line first, and also display a text string on line 4 that is right aligned without clearing the line :
+```
+"payload": [
+    {
+        "clear": true,
+        "text": "Line 1 Text",
+        "alignment": "center"
+    },
+    {},
+    {},
+    {
+        "clear": false,
+        "text": "Line 4 Text",
+        "alignment": "right"
+    }
+]
+```
+The <code>msg.payload</code> field is not required if the intent is only to perform an action specified by <code>msg.action</code>.
 
 ### msg.action
 This is a string field where an action can be specified that should be performed prior to anything being written to the display.
 
 Accepted action strings are :
-* 'clearscreen' - This will clear the whole LCD display
-* 'clearline' - This will clear only the line specified by msg.line (or the first line if not specified)
-* 'on' - Turn the display on
-* 'off' - Turn the display off
-
-### msg.alignment
-This is a string field where the text alignment can be specified of the text specified in the [msg.payload](#msgpayload) field.
-
-Accepted alignment strings are :
-* 'center' - This will align the text to the center of the line
-* 'right' - This will align the text to the right of the line
-
-If no value is specified, the text will be left aligned.
-
-### msg.payload
-This is a string field where text can be specified that should be displayed.
+* "clearscreen" - This will clear the whole LCD display
+* "on" - Turn the display on
+* "off" - Turn the display off
 
 ## Examples
 
-### Clear the screen and display text on specific line
+### Clear the screen and display text on line 2
 ```
 "msg": {
     "action": "clearscreen",
-    "line": 2,
-    "payload": "Hello World!"
+    "payload": [
+        {},
+        {
+            "text": "Example text"
+        }
+    ]
 }
 ```
 
@@ -94,10 +108,15 @@ This is a string field where text can be specified that should be displayed.
 }
 ```
 
-### Clear a specific line
+### Clear line 3
 ```
 "msg": {
-    "action": "clearline",
-    "line": 3
+    "payload": [
+        {},
+        {},
+        {
+            "clear": true
+        }
+    ]
 }
 ```
