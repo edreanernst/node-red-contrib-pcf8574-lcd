@@ -21,8 +21,8 @@ Examples of this hardware setup can be found at the following URL's :
 
 ## Dependencies
 This node depends on the following libraries :
-* i2c-bus (http://)
-* sleep (http://)
+* i2c-bus (https://www.npmjs.com/package/i2c-bus)
+* sleep (https://www.npmjs.com/package/sleep)
 
 It is also necessary to make sure that I2C is enabled on your Raspberry Pi. This can be done in raspi-config :
 ```
