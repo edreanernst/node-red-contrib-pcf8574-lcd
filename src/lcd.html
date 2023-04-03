@@ -28,8 +28,9 @@ SOFTWARE.
         color: '#a6bbcf',
         defaults: {
             name: {value:""},
-            variant: {value:"PCF8574"},
-            size: {value:"20x4"}
+            size: {value:"20x4"},
+            bus: 1,
+            address: 39,
         },
         inputs:1,
         outputs:0,
@@ -43,11 +44,11 @@ SOFTWARE.
 <script type="text/x-red" data-template-name="LCD-I2C">
     <div class="form-row">
         <label for="node-input-address"><i class="fa fa-hashtag "></i> I2C Bus Number</label>
-        <input type="number" id="node-input-bus" value="0">
+        <input type="number" id="node-input-bus" value="0" min="0"> 
     </div>
     <div class="form-row">
         <label for="node-input-address"><i class="fa fa-hashtag "></i> I2C Device-Address</label>
-        <input type="number" id="node-input-address" value="39">
+        <input type="number" id="node-input-address" value="39" min="0">
     </div>
     <div class="form-row">
         <label for="node-input-size"><i class="fa fa-arrows"></i> Size</label>
