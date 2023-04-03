@@ -18,8 +18,8 @@ var displayPorts = {
 };
 
 class LCD {
-    constructor(address) {
-        this.i2c = require('i2c-bus').openSync(1);
+    constructor(address, bus) {
+        this.i2c = require('i2c-bus').openSync(bus);
         this.addr = address;
 
         this.write4(0x30, displayPorts.CMD); //initialization
