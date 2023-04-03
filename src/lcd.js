@@ -26,8 +26,8 @@ module.exports = function(RED) {
     function LCDI2C(config) {
         RED.nodes.createNode(this, config);
         var node = this;
-        var addr = config.address;
-        var bus = config.bus;
+        var addr = parseInt(config.address, 16); // convert from hexadecimal to decimal
+        var bus = Number(config.bus);
         var numLines = 4;
         var numCols = 20;
         switch (config.size) {
