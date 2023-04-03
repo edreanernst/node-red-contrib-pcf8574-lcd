@@ -26,25 +26,22 @@ module.exports = function(RED) {
     function LCDI2C(config) {
         RED.nodes.createNode(this, config);
         var node = this;
-        var addr = 0x0;
+        var addr = config.address;
+        var bus = config.bus;
         var numLines = 4;
         var numCols = 20;
-        switch (config.variant) {
-            case "PCF8574":
-                addr = 0x27;
-                break;
-            case "PCF8574AT":
-                addr = 0x3F;
-                break;
-        }
         switch (config.size) {
             case "20x4":
                 numLines = 4;
                 numCols = 20;
                 break;
+            case "16x2":
+                numLines = 2;
+                numCols = 16;
+                break;
         }
 
-        var lcd = new LCD(addr);
+        var lcd = new LCD(addr, bus);
         if (typeof lcd !== 'undefined' && lcd) {
             if (lcd.isAlive()) {
                 node.status({fill:"green", shape:"dot", text:"OK"});

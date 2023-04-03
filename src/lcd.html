@@ -42,16 +42,18 @@ SOFTWARE.
 
 <script type="text/x-red" data-template-name="LCD-I2C">
     <div class="form-row">
-        <label for="node-input-variant"><i class="fa fa-microchip"></i> Variant</label>
-        <select type="text" id="node-input-variant" style="width:120px;">
-            <option value="PCF8574">PCF8574</option>
-            <option value="PCF8574AT">PCF8574AT</option>
-        </select>
+        <label for="node-input-address"><i class="fa fa-hashtag "></i> I2C Bus Number</label>
+        <input type="number" id="node-input-bus" value="0">
+    </div>
+    <div class="form-row">
+        <label for="node-input-address"><i class="fa fa-hashtag "></i> I2C Device-Address</label>
+        <input type="number" id="node-input-address" value="39">
     </div>
     <div class="form-row">
         <label for="node-input-size"><i class="fa fa-arrows"></i> Size</label>
         <select type="text" id="node-input-size" style="width:80px;">
             <option value="20x4">20x4</option>
+            <option value="16x2">16x2</option>
         </select>
     </div>
     <div class="form-row">
