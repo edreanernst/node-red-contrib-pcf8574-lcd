@@ -30,6 +30,16 @@ module.exports = function(RED) {
         var bus = Number(config.bus);
         var numLines = 4;
         var numCols = 20;
+        switch (config.variant) {
+            case "PCF8574": 
+                bus = 1; 
+                addr = 0x27;
+                break;
+            case "PCF8574AT":
+                bus = 1;
+                addr = 0x3F;
+                break;
+        };
         switch (config.size) {
             case "20x4":
                 numLines = 4;
@@ -50,6 +60,7 @@ module.exports = function(RED) {
                 RED.log.error("The LCD is unreachable. Please check variant property or connection.");
             }
         }
+
         node.on('input', function(msg) {
             if (lcd.isAlive()) {
                 node.status({fill:"green", shape:"dot", text:"OK"});
